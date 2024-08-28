@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html lang="en" dir="ltr" data-theme="light">
+
+<head>
+    <title>Generate QR Code</title>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f6f6" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#5d676f" />
+    <script>
+        const colorMode = () => {
+            // if localStorage preference exists
+            const localTheme = localStorage.getItem('theme');
+            if (localTheme) {
+                return localTheme;
+            }
+            // if OS preference exists
+            const mql = window.matchMedia('(prefers-color-scheme: dark)');
+            if (typeof mql.matches === 'boolean') {
+                return mql.matches ? 'dark' : 'light';
+            }
+            return 'light';
+        };
+        // set theme based on colorMode()
+        document.documentElement.setAttribute('data-theme', colorMode());
+    </script>
+    <link rel="stylesheet" href="https://patternlibrary.sandiego.gov/dist/sand.min.css" />
+    <meta name="description" content="Unofficial website of Councilmember Golang Gopher (District -1).">
+    <meta name="keywords" content="San Diego, Golang, Councilmember Golang Gopher, District -1">
+    <link rel="canonical" href="./">
+    <link rel="icon" sizes="any" type="image/svg+xml" href="./images/drupal-sd.svg">
+</head>
+
+<body>
+    <div id="outer-wrap" style="background-color: #fad2a4;">
+        <!-- Header -->
+        <div role="banner"
+            style="background-image: url(./images/diamond-mascots.png); background-size: cover; width: 100%; background-position: center center; background-attachment: fixed;">
+            <!-- Nav -->
+            <div class="hide-on-mobile top-menu aligncenter" style="max-width: 1200px;">
+                <h1 class="heading--center heading--light l-padding-tm l-padding-bx" style="mix-blend-mode:exclusion;">
+                    Councilmember Golang Gopher</h1>
+                <a href="#main" class="visuallyhidden">Skip to main content</a>
+                <nav role="navigation">
+                    <ul class="department-menu">
+                        <li class="is_active"><a href="./" aria-current="page">Home</a></li>
+                        <li><a href="./about.html">About</a></li>
+                        <li><a href="./staff.html">Staff</a></li>
+                        <li><a href="./gallery.html">Gallery</a></li>
+                        <li><a href="./search.html">Search</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div> <!-- End of Header -->
+
+        <!-- Post-Nav -->
+        <div class="aligncenter off-white-bg l-padding-bm" style="max-width: 1200px;">
+            <div class="grid-x grid-padding-x l-padding-am">
+                <div class="cell medium-9">
+                    <input type="text" id="qr-text" placeholder="Enter URL or Text">
+                </div>
+                <div class="cell medium-3">
+                    <button class="btn btn--md btn--outline" onclick="generateQRCode()">Generate QR Code</button>
+                </div>
+            </div>
+            <div id="qr-container" class="aligncenter" style="position: relative; display: block;">
+                <canvas id="qr-code" class="aligncenter"></canvas>
+                <img id="logo" class="img-circle" src="https://www.sandiego.gov/themes/custom/sand/images/apple-touch-icon.png" alt="City of San Diego Logo" style="position: absolute; display: none; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px;">
+            </div>
+
+            <script src="https://cdn.jsdelivr.net/gh/neocotic/qrious@latest/dist/qrious.min.js"></script>
+            <script>
+                function generateQRCode() {
+                    const qr = new QRious({
+                        element: document.getElementById('qr-code'),
+                        value: document.getElementById('qr-text').value,
+                        size: 200
+                    });
+
+                    const qrContainer = document.getElementById('qr-container');
+                    const logo = document.getElementById('logo');
+                    logo.style.display = 'block';
+                    qrContainer.appendChild(logo);
+                }
+            </script>
+        </div>
+
+        <footer role="contentinfo" class="footer" style="background-color: #fad2a4;">
+            <div class="region region--footer grid-container alto-bg">
+                <div class="region--footer__inner">
+
+                    <div class="footer--left">
+                        <div class="top">
+                            <img src="./images/drupal-sd.svg" alt="Drupal SD logo" width="50" height="50">
+                            <ul class="social-links">
+                                <li><a class="icon--facebook" href=""><i class="icon-facebook"></i></a></li>
+                                <li><a class="icon--youtube" href=""><i class="icon-youtube"></i></a></li>
+                                <li><a class="icon--instagram" href=""><i class="icon-instagram"></i></a></li>
+                            </ul>
+                        </div>
+                        <p class="copyright">
+                            &copy;
+                            <span id="copyright-year">
+                                <script>document.getElementById('copyright-year').appendChild(document.createTextNode(new Date().getFullYear()))</script>
+                            </span>
+                            Golang Gopher. <br>Designed with City of San Diego's <a
+                                href="https://patternlibrary.sandiego.gov">Pattern Library</a>.
+                        </p>
+                    </div>
+                    <nav class="menu--footer">
+
+                        <ul>
+                            <li class="menu-item--expanded">
+                                <a href="/" data-drupal-link-system-path="<front>" class="is-active">Staff</a>
+                                <ul>
+                                    <li><a href="">Scratch Cat</a></li>
+                                    <li><a href="">Golang Gopher</a></li>
+                                    <li><a href="">GitHub Octocat</a></li>
+                                    <li><a href="">Duolingo Owl</a></li>
+                                    <li><a href="">Discord Clyde</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="menu-item--expanded">
+                                <a href="/" data-drupal-link-system-path="<front>" class="is-active">Organizations</a>
+                                <ul>
+                                    <li><a href="https://intermission.ucsd.edu/">The Intermission Orchestra</a></li>
+                                    <li><a href="https://acmucsd.com/">Association for Computing Machinery</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="menu-item--expanded">
+                                <a href="/" data-drupal-link-system-path="<front>" class="is-active">City of San
+                                    Diego</a>
+                                <ul>
+                                    <li><a href="https://www.sandiego.gov/">Public Website</a></li>
+                                    <li><a href="https://patternlibrary.sandiego.gov/">Pattern Library</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </nav>
+                </div>
+            </div>
+            <div class="gtranslate_wrapper"></div>
+            <script>window.gtranslateSettings = { "default_language": "en", "native_language_names": true, "languages": ["en", "zh-CN", "ja", "es", "fr", "ko", "vi", "tl", "hi"], "wrapper_selector": ".gtranslate_wrapper", "switcher_horizontal_position": "right", "flag_style": "3d", "alt_flags": { "en": "usa" } }</script>
+            <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+        </footer>
+    </div> <!-- End of page wrapper -->
+
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://patternlibrary.sandiego.gov/dist/sand.js"></script>
+</body>
+
+</html>
