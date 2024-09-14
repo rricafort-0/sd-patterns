@@ -55,34 +55,91 @@
         </div> <!-- End of Header -->
 
         <!-- Post-Nav -->
-        <div class="aligncenter off-white-bg l-padding-bm" style="max-width: 1200px;">
-            <div class="grid-x grid-padding-x l-padding-am">
-                <div class="cell medium-9">
-                    <input type="text" id="qr-text" placeholder="Enter URL or Text">
+        <div class="l-margin-am">
+            <h2 class="heading--snug">Best Practices</h2>
+
+            <ul>
+                <li>Only use City approved QR code generators, such as the one provided on this page or embedded into City licensed software such as Adobe InDesign.</li>
+                <li>After generating the QR code, verify that it takes you to the correct URL.</li>
+                <li>
+                    <p>Show the full URL that the QR code will link to with the QR display. Inform users that they may scan the QR code or enter the URL in their browsers.<br>
+                        Example:</p>
+            
+                    <p class="text-center">Go to <strong>https://www.sandiego.gov</strong> or scan the QR code:<br>
+                        <img alt="QR code for https://www.sandiego.gov" class="l-margin-vs" height="200" src="/sites/default/files/sdgov-qr.png" width="200"></p>
+                </li>
+                <li>Physically secure the location that the QR code will be displayed, such as in a locked display case or behind a pane of glass. This can discourage bad actors from physically covering the original QR code with a malicious QR code.</li>
+            </ul>
+            
+            <h2>Generate QR Code</h2>
+            
+            <div class="row">
+                <div class="columns six l-padding-desktop-ln"><input id="qr-text" placeholder="Enter full URL" type="text"><br>
+                    <button class="btn btn--md" onclick="generateQRCode()">Generate QR Code</button>
+            
+                    <div class="l-margin-bl">
+                        <div class="text-center"><canvas class="aligncenter" id="merged-canvas"></canvas></div>
+                    </div>
                 </div>
-                <div class="cell medium-3">
-                    <button class="btn btn--md btn--outline" onclick="generateQRCode()">Generate QR Code</button>
+            
+                <div class="columns six l-padding-mobile-tm l-padding-desktop-lm">
+                    <div class="background--off-white rounded-corners l-padding-ad">
+                        <h3 class="h4 heading--snug">Instructions</h3>
+            
+                        <ol>
+                            <li>After you generate the QR code, right-click on the QR code.</li>
+                            <li>Select "Save Image As..." to save the QR code to your computer.</li>
+                        </ol>
+                    </div>
                 </div>
             </div>
-            <div id="qr-container" class="aligncenter" style="position: relative; display: block;">
-                <canvas id="qr-code" class="aligncenter"></canvas>
-                <img id="logo" class="img-circle" src="https://www.sandiego.gov/themes/custom/sand/images/apple-touch-icon.png" alt="City of San Diego Logo" style="position: absolute; display: none; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px;">
-            </div>
+            
+            <div class="visuallyhidden" id="qr-container"><canvas id="qr-code"></canvas> <img alt="City of San Diego Logo" id="logo" src="./images/drupal-sd.svg"></div>
+            
+            <script src="https://webdocs.sandiego.gov/files/qr.min.js"></script>
+            
+            <script> 
+                function generateQRCode() { 
+                    const qr = new QRious({ 
+                        element: document.getElementById('qr-code'), 
+                        value: document.getElementById('qr-text').value, 
+                        size: 300 
+                    }); 
+                        
+                    const qrCanvas = document.getElementById('qr-code'); 
+                    const logo = document.getElementById('logo'); 
+                    const mergedCanvas = document.getElementById('merged-canvas'); 
+                    const ctx = mergedCanvas.getContext('2d'); 
+                    mergedCanvas.width = qrCanvas.width; 
+                    mergedCanvas.height = qrCanvas.height; 
+                    ctx.drawImage(qrCanvas, 0, 0); 
+                    const logoSize = 70; 
+                    ctx.drawImage(logo, (qrCanvas.width - logoSize) / 2, (qrCanvas.height - logoSize) / 2, logoSize, logoSize); 
+                    
+                    if (!document.getElementById('qr-code-message')) { 
+                        const message = document.createElement('p'); 
+                        message.id = 'qr-code-message'; 
+                        const messageText = document.createTextNode('You may now save your new QR code:'); 
+                        message.appendChild(messageText); 
+                        mergedCanvas.parentNode.insertBefore(message, mergedCanvas); 
+                    } 
 
-            <script src="https://cdn.jsdelivr.net/gh/neocotic/qrious@latest/dist/qrious.min.js"></script>
-            <script>
-                function generateQRCode() {
-                    const qr = new QRious({
-                        element: document.getElementById('qr-code'),
-                        value: document.getElementById('qr-text').value,
-                        size: 200
-                    });
+                    if (!document.getElementById('download-button')) {
+                        const downloadButton = document.createElement('button');
+                        downloadButton.id = 'download-button';
+                        downloadButton.className = 'btn btn--md l-margin-td';
+                        downloadButton.textContent = 'Download QR Code';
 
-                    const qrContainer = document.getElementById('qr-container');
-                    const logo = document.getElementById('logo');
-                    logo.style.display = 'block';
-                    qrContainer.appendChild(logo);
-                }
+                        downloadButton.onclick = function() {
+                            const link = document.createElement('a');
+                            link.href = mergedCanvas.toDataURL('image/png');
+                            link.download = 'qr-code.png';
+                            link.click();
+                        };
+
+                        mergedCanvas.parentNode.insertBefore(downloadButton, mergedCanvas.nextSibling);
+                    }
+                } 
             </script>
         </div>
 
