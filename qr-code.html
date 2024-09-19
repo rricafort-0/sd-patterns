@@ -68,8 +68,8 @@
                         Example:</p>
 
                     <p class="text-center">Go to <strong>https://www.sandiego.gov</strong> or scan the QR code:<br>
-                        <img alt="QR code for https://www.sandiego.gov" class="l-margin-vs" height="200"
-                            src="/sites/default/files/sdgov-qr.png" width="200">
+                        <img alt="Not a QR code (placeholder)" class="l-margin-vs" height="200"
+                            src="/images/drupal-sd.svg" width="200">
                     </p>
                 </li>
                 <li>Physically secure the location that the QR code will be displayed, such as in a locked display case
@@ -82,6 +82,10 @@
             <div class="row l-margin-bm">
                 <div class="seven columns">
                     <input id="qr-text" placeholder="Enter full URL" type="url">
+                    <label>
+                        <input type="checkbox" id="add-logo-checkbox" checked>
+                        Add City Logo to QR code
+                    </label>
                 </div>
 
                 <div class="five columns">
@@ -103,9 +107,11 @@
 
             <script>
                 function generateQRCode() {
-                    const QR_DISPLAY_WIDTH = 300;   // Display size on the screen
-                    const QR_DOWNLOAD_WIDTH = 1000; // High-resolution size for download
-                    const LOGO_DOWNLOAD_WIDTH = 233; // Scaled logo size for high-resolution QR code
+                    const QR_DISPLAY_WIDTH = 300;
+                    const QR_DOWNLOAD_WIDTH = 1000;
+                    const LOGO_DOWNLOAD_WIDTH = 233; 
+                    const qrCanvas = document.getElementById('qr-code');
+                    const displayCtx = qrCanvas.getContext('2d');
 
                     // Get the input value (URL)
                     const inputValue = document.getElementById('qr-text').value;
@@ -128,20 +134,24 @@
                     ctx.drawImage(qr.canvas, 0, 0, QR_DOWNLOAD_WIDTH, QR_DOWNLOAD_WIDTH);
 
                     // Draw the City of San Diego logo at the center of the high-resolution QR code
-                    const logo = document.getElementById('logo');
-                    const logoImage = new Image();
-                    logoImage.src = logo.src;
-                    const qrCanvas = document.getElementById('qr-code');
-                    const displayCtx = qrCanvas.getContext('2d');
-                    logoImage.onload = function () {
-                        ctx.drawImage(logoImage, (QR_DOWNLOAD_WIDTH - LOGO_DOWNLOAD_WIDTH) / 2, (QR_DOWNLOAD_WIDTH - LOGO_DOWNLOAD_WIDTH) / 2, LOGO_DOWNLOAD_WIDTH, LOGO_DOWNLOAD_WIDTH);
-
-                        // Display the scaled-down version of the merged QR code (300x300)
+                    if (document.getElementById('add-logo-checkbox').checked) {
+                        const logo = document.getElementById('logo');
+                        const logoImage = new Image();
+                        logoImage.src = logo.src;
                         
+                        logoImage.onload = function () {
+                            ctx.drawImage(logoImage, (QR_DOWNLOAD_WIDTH - LOGO_DOWNLOAD_WIDTH) / 2, (QR_DOWNLOAD_WIDTH - LOGO_DOWNLOAD_WIDTH) / 2, LOGO_DOWNLOAD_WIDTH, LOGO_DOWNLOAD_WIDTH);
+                            displayQRCode();
+                        };
+                    } else {
+                        displayQRCode();
+                    }
+
+                    function displayQRCode() {
                         qrCanvas.width = QR_DISPLAY_WIDTH;
                         qrCanvas.height = QR_DISPLAY_WIDTH;
                         displayCtx.drawImage(mergedCanvas, 0, 0, QR_DISPLAY_WIDTH, QR_DISPLAY_WIDTH);
-                    };
+                    }
 
                     // Insert message before the QR code if not already present
                     if (!document.getElementById('qr-code-message')) {
